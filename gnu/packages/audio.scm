@@ -1891,3 +1891,40 @@ access to ALSA PCM devices, taking care of the many functions required to
 open, initialise and use a hw: device in mmap mode, and providing floating
 point audio data.")
     (license license:gpl3+)))
+
+(define-public swh-plugins-lv2
+  (package
+    (name "swh-plugins-lv2")
+    (version "2015-11-11-5098e09e255eaed14e0d40ca5e7e6dfcb782d7ea")
+    (source (origin
+              (method url-fetch)
+              (uri "https://github.com/swh/lv2/archive/5098e09e255eaed14e0d40ca5e7e6dfcb782d7ea.zip")
+              (sha256
+               (base32
+                "11c6y4nfw5kz7647axpgdaryiiwwrplnkdbkglx362cbcmhpvds8"))))
+    (build-system gnu-build-system)
+    (arguments 
+     `(#:phases
+       (alist-cons-after
+        'unpack 'patch-makefile-and-enter-directory
+        (lambda
+            _
+          (substitute* "Makefile"
+            (("/usr/local") (assoc-ref %outputs "out"))
+            (("install:") "install: install-system")))
+        (alist-delete
+         'check
+         (alist-delete
+          'configure
+          %standard-phases)))
+       #:make-flags '("CC=gcc")))
+    (inputs
+     `(("lv2" ,lv2)
+       ("unzip" ,unzip)
+       ("fftw" ,fftw)
+       ("libxslt" ,libxslt)))
+    (home-page "http://plugin.org.uk")
+    (synopsis "SWH Plugins in LV2 format")
+    (description
+     "A collection of Steve Harris' audui plugins in LV2 format.")
+    (license license:gpl3+)))
