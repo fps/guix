@@ -1891,3 +1891,50 @@ access to ALSA PCM devices, taking care of the many functions required to
 open, initialise and use a hw: device in mmap mode, and providing floating
 point audio data.")
     (license license:gpl3+)))
+
+(define-public swh-plugins-lv2
+  ;; latest available revision and
+  ;; no releases yet 
+  (let ((commit "5098e0"))
+    (package
+      (name "swh-plugins-lv2")
+      (version (string-append "2015-11-11-" commit))
+      (source (origin
+              (method url-fetch)
+              (uri (string-append "https://github.com/swh/"
+                                  "lv2/archive/"
+                                  commit ".tar.gz"))
+              (sha256
+               (base32
+                "0ysc1chzhdsw3xxsdj5rvw7lcll3xw6yyha20irfnk2pla22vb7i"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:phases
+       (alist-cons-after
+        'unpack 'patch-makefile-and-enter-directory
+        (lambda _
+          (substitute* "Makefile"
+            (("install:") "install: install-system")))
+        ;; no configure script
+        (alist-delete
+         'configure
+         %standard-phases))
+       #:make-flags (list
+                     "CC=gcc"
+                     (string-append "PREFIX="
+                                    (assoc-ref %outputs "out")))
+       ;; no check target
+       #:tests? #f))
+    (inputs
+     `(("lv2" ,lv2)
+       ("fftw" ,fftw)
+       ("libxslt" ,libxslt)))
+    (home-page "http://plugin.org.uk")
+    (synopsis "SWH Plugins in LV2 format")
+    (description
+     "Swh-plugins-lv2 is a collection of Steve Harris' audio plugins in LV2
+format. Plugin classes include: dynamic (compressor, limiter), time (delay,
+chorus, flanger), ringmodulator, distortion, filters, pitchshift,
+oscillators, emulation (valve, tape), bit fiddling (decimator, pointer-
+cast), etc.")
+    (license license:gpl3+))))
