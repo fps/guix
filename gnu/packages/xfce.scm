@@ -646,6 +646,43 @@ menubar and the window decorations are hidden) that helps you to save space
 on your desktop.")
     (license gpl2+)))
 
+(define-public xfce4-power-manager
+  (package
+    (name "xfce4-power-manager")
+    (version "1.4.3")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "http://archive.xfce.org/xfce/4.12"
+                                  "/src/" name "-" version ".tar.bz2"))
+              (sha256
+               (base32
+                "04909sfc2nrj2wg9cw6y9y2r9yrp3l3vc201sy1gaiap67fi33h1"))))
+    (build-system gnu-build-system)
+    (arguments
+     '(#:configure-flags '("--enable-gtk3")))
+    (native-inputs
+     `(("pkg-config" ,pkg-config)
+       ("intltool" ,intltool)))
+    (inputs
+     `(("exo" ,exo)
+       ("garcon", garcon)
+       ("lbxrandr" ,libxrandr)
+       ("libwnck" ,libwnck-1)
+       ("upower" ,upower)
+       ("libnotify" ,libnotify)
+       ("libxfce4ui" ,libxfce4ui)))
+    (native-search-paths
+     (list (search-path-specification
+            (variable "X_XFCE4_LIB_DIRS")
+            (files '("lib/xfce4")))))
+    (home-page "http://www.xfce.org/")
+    (synopsis "Xfce Power Manager")
+    (description
+     "Power manager daemon for Xfce and associated settings page. 
+Controls backlight, power saving, etc.")
+    ;; Libraries are under LGPLv2.1+, and programs under GPLv2+.
+    (license (list gpl2+ lgpl2.1+))))
+
 (define-public xfce
   (package
     (name "xfce")
@@ -689,6 +726,7 @@ on your desktop.")
        ("xfce4-session"        ,xfce4-session)
        ("xfce4-settings"       ,xfce4-settings)
        ("xfce4-terminal"       ,xfce4-terminal)
+       ("xfce4-power-manager"  ,xfce4-power-manager)
        ("xfconf"               ,xfconf)
        ("xfdesktop"            ,xfdesktop)
        ("xfwm4"                ,xfwm4)
