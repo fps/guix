@@ -675,7 +675,7 @@ on your desktop.")
     (home-page "http://www.xfce.org/")
     (synopsis "Xfce Power Manager")
     (description
-     "Power manager daemon for Xfce and associated settings page. 
+     "Power manager daemon for Xfce and associated settings page.
 Controls backlight, power saving, etc.")
     ;; Libraries are under LGPLv2.1+, and programs under GPLv2+.
     (license (list gpl2+ lgpl2.1+))))
