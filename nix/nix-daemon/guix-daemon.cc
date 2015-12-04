@@ -80,6 +80,8 @@ builds derivations on behalf of its clients.");
 #define GUIX_OPT_NO_BUILD_HOOK 14
 #define GUIX_OPT_GC_KEEP_OUTPUTS 15
 #define GUIX_OPT_GC_KEEP_DERIVATIONS 16
+#define GUIX_OPT_CACHE_TIMEOUT_FAILURES 17
+#define GUIX_OPT_CACHE_HOOK_FAILURES 18
 
 static const struct argp_option options[] =
   {
@@ -104,6 +106,10 @@ static const struct argp_option options[] =
       n_("do not use the 'build hook'") },
     { "cache-failures", GUIX_OPT_CACHE_FAILURES, 0, 0,
       n_("cache build failures") },
+    { "cache-timeout-failures", GUIX_OPT_CACHE_TIMEOUT_FAILURES, 0, 0,
+      n_("cache build failures due to timeouts (depends on cache-failures)") },
+    { "cache-hook-failures", GUIX_OPT_CACHE_HOOK_FAILURES, 0, 0,
+      n_("cache build failures due to hook failures (depends on cache-failures)") },
     { "lose-logs", GUIX_OPT_LOSE_LOGS, 0, 0,
       n_("do not keep build logs") },
     { "disable-log-compression", GUIX_OPT_DISABLE_LOG_COMPRESSION, 0, 0,
@@ -188,6 +194,12 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case GUIX_OPT_CACHE_FAILURES:
       settings.cacheFailure = true;
+      break;
+    case GUIX_OPT_CACHE_TIMEOUT_FAILURES:
+      settings.cacheTimeoutFailure = true;
+      break;
+    case GUIX_OPT_CACHE_HOOK_FAILURES:
+      settings.cacheHookFailure = true;
       break;
     case GUIX_OPT_IMPERSONATE_LINUX_26:
       settings.impersonateLinux26 = true;

@@ -170,6 +170,12 @@ struct Settings {
     /* Whether to cache build failures. */
     bool cacheFailure;
 
+    /* Whether to cache timeout failures */
+    bool cacheTimeoutFailure;
+
+    /* Whether to cache hook failures */
+    bool cacheHookFailure;
+  
     /* How often (in seconds) to poll for locks. */
     unsigned int pollInterval;
 

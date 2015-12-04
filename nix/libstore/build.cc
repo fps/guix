@@ -1483,12 +1483,20 @@ void DerivationGoal::buildDone()
             if (settings.printBuildTrace)
                 printMsg(lvlError, format("@ build-failed %1% - timeout") % drvPath);
             worker.timedOut = true;
+
+            if (settings.cacheFailure && settings.cacheTimeoutFailure)
+                foreach (DerivationOutputs::iterator, i, drv.outputs)
+                    worker.store.registerFailedPath(i->second.path);
         }
 
         else if (hook && (!WIFEXITED(status) || WEXITSTATUS(status) != 100)) {
             if (settings.printBuildTrace)
                 printMsg(lvlError, format("@ hook-failed %1% - %2% %3%")
                     % drvPath % status % e.msg());
+
+            if (settings.cacheFailure && settings.cacheHookFailure)
+                foreach (DerivationOutputs::iterator, i, drv.outputs)
+                    worker.store.registerFailedPath(i->second.path);
         }
 
         else {
