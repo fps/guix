@@ -678,7 +678,7 @@ the X.Org X Server version 1.7 and later (X11R7.5 or later).")
      `(("libdrm" ,libdrm)
        ("libx11" ,libx11)
        ("libxcb" ,libxcb)
-       ("libxxf86vm", ibxxf86vm)
+       ("libxxf86vm", libxxf86vm)
        ("geoclue" ,geoclue)))
     (home-page "https://github.com/jonls/redshift")
     (synopsis
@@ -691,4 +691,4 @@ daytime. During twilight and early morning, the color temperature transitions
 smoothly from night to daytime temperature to allow your eyes to slowly
 adapt. At night the color temperature should be set to match the lamps in your
 room.")
-    (license license:gplv3+)))
+    (license license:gpl3+)))
