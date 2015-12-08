@@ -29,6 +29,9 @@
   #:use-module (gnu packages python)
   #:use-module (gnu packages readline)
   #:use-module (gnu packages guile)
+  #:use-module (gnu packages gtk)
+  #:use-module (gnu packages glib)
+  #:use-module (gnu packages pkg-config)
   #:use-module ((gnu packages compression)
                 #:select (lzip)))
 
@@ -68,6 +71,35 @@
     (description
      "GNU Parted is a package for creating and manipulating disk partition
 tables.  It includes a library and command-line utility.")
+    (license gpl3+)))
+
+(define-public gparted
+  (package
+    (name "gparted")
+    (version "0.24.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "http://skylink.dl.sourceforge.net/"
+                           "project/gparted/gparted/gparted-"
+                           version "/"
+                           "gparted-" version ".tar.bz2"))
+       (sha256
+        (base32
+         "0q6d1s9f4qgdivj4vm9w87qmdfyq8s65jzkhv05rp9cl72rqlf82"))))
+    (build-system gnu-build-system)
+    (inputs
+     `(("parted" ,parted)
+       ("util-linux" ,libuuid)
+       ("intltool" ,intltool)
+       ("pkg-config" ,pkg-config)
+       ("gtk" ,gtk+-2)))
+    ;(native-inputs
+    ; `(("pkg-config" ,pkg-config)))
+    (home-page "https://gparted.org")
+    (synopsis "GTK frontend for parted")
+    (description "GParted helps you create, change
+and modify partitions")
     (license gpl3+)))
 
 (define-public fdisk
