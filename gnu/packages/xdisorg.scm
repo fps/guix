@@ -655,3 +655,33 @@ use it as well.")
      "The xf86-input-wacom driver is the wacom-specific X11 input driver for
 the X.Org X Server version 1.7 and later (X11R7.5 or later).")
     (license license:x11)))
+
+(define-public redshift
+  (package
+    (name "redshift")
+    (version "1.10")
+    (source
+     (origin
+       (method url-fetch)
+       (uri
+        "https://github.com/jonls/redshift/releases/download/v1.10/redshift-1.10.tar.xz")
+       (sha256
+        (base32
+         "19pfk9il5x2g2ivqix4a555psz8mj3m0cvjwnjpjvx0llh5fghjv"))))
+    (build-system gnu-build-system)
+    (native-inputs
+     `(("pkg-config" ,pkg-config)))
+    (inputs
+     `(("intltool" ,intltool)
+       ("libdrm" ,libdrm)
+       ("libx11" ,libx11)
+       ("libxcb" ,libxcb)
+       ("geoclue" ,geoclue)))
+    (home-page "https://github.com/jonls/redshift")
+    (synopsis
+     "Adjusts the color temperature of your screen
+ according to your surroundings")
+    (description
+     "This may help your eyes hurt less if you are working
+in front of the screen at night.")
+    (license license:gpl3)))
