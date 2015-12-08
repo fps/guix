@@ -30,7 +30,8 @@
   #:use-module (guix graph)
   #:use-module (guix scripts graph)
   #:use-module (guix monads)
-  #:use-module ((guix gnu-maintenance) #:select (%gnu-updater))
+  #:use-module ((guix gnu-maintenance)
+                #:select (%gnu-updater %gnome-updater))
   #:use-module (guix import elpa)
   #:use-module (guix import cran)
   #:use-module (guix gnupg)
@@ -191,15 +192,17 @@ unavailable optional dependencies such as Guile-JSON."
 (define %updaters
   ;; List of "updaters" used by default.  They are consulted in this order.
   (list-updaters %gnu-updater
+                 %gnome-updater
                  %elpa-updater
                  %cran-updater
                  ((guix import pypi) => %pypi-updater)))
 
 (define (lookup-updater name)
   "Return the updater called NAME."
-  (find (lambda (updater)
-          (eq? name (upstream-updater-name updater)))
-        %updaters))
+  (or (find (lambda (updater)
+              (eq? name (upstream-updater-name updater)))
+            %updaters)
+      (leave (_ "~a: no such updater~%") name)))
 
 (define (list-updaters-and-exit)
   "Display available updaters and exit."

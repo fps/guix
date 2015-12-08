@@ -1087,9 +1087,10 @@ FILE.  With a prefix argument, also prompt for PROFILE."
                               file profile)))
     (guix-eval-in-repl
      (guix-make-guile-expression
-      'guix-package
-      (concat "--profile=" profile)
-      (concat "--manifest=" file))
+      'guix-command
+      "package"
+      (concat "--profile="  (expand-file-name profile))
+      (concat "--manifest=" (expand-file-name file)))
      operation-buffer)))
 
 
@@ -1185,10 +1186,11 @@ The function is called with a single argument - a command line string."
 (defun guix-pull (&optional verbose)
   "Run Guix pull operation.
 If VERBOSE is non-nil (with prefix argument), produce verbose output."
-  (interactive)
+  (interactive "P")
   (let ((args (and verbose '("--verbose"))))
     (guix-eval-in-repl
-     (apply #'guix-make-guile-expression 'guix-pull args)
+     (apply #'guix-make-guile-expression
+            'guix-command "pull" args)
      nil 'pull)))
 
 (provide 'guix-base)

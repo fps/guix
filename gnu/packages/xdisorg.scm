@@ -664,24 +664,31 @@ the X.Org X Server version 1.7 and later (X11R7.5 or later).")
      (origin
        (method url-fetch)
        (uri
-        "https://github.com/jonls/redshift/releases/download/v1.10/redshift-1.10.tar.xz")
+        (string-append "https://github.com/jonls/redshift/"
+                       "releases/download/v" version
+                       "/redshift-" version ".tar.xz"))
        (sha256
         (base32
          "19pfk9il5x2g2ivqix4a555psz8mj3m0cvjwnjpjvx0llh5fghjv"))))
     (build-system gnu-build-system)
     (native-inputs
-     `(("pkg-config" ,pkg-config)))
+     `(("pkg-config" ,pkg-config)
+       ("intltool" ,intltool)))
     (inputs
-     `(("intltool" ,intltool)
-       ("libdrm" ,libdrm)
+     `(("libdrm" ,libdrm)
        ("libx11" ,libx11)
        ("libxcb" ,libxcb)
+       ("libxxf86vm", ibxxf86vm)
        ("geoclue" ,geoclue)))
     (home-page "https://github.com/jonls/redshift")
     (synopsis
-     "Adjusts the color temperature of your screen
+     "Adjusts your screen's color temperature
  according to your surroundings")
     (description
-     "This may help your eyes hurt less if you are working
-in front of the screen at night.")
-    (license license:gpl3)))
+     "Redshift adjusts the color temperature according to the
+position of the sun. A different color temperature is set during night and
+daytime. During twilight and early morning, the color temperature transitions
+smoothly from night to daytime temperature to allow your eyes to slowly
+adapt. At night the color temperature should be set to match the lamps in your
+room.")
+    (license license:gplv3+)))

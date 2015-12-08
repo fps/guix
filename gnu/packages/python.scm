@@ -10,10 +10,12 @@
 ;;; Copyright © 2015 Ricardo Wurmus <rekado@elephly.net>
 ;;; Copyright © 2015 Christopher Allan Webber <cwebber@dustycloud.org>
 ;;; Copyright © 2015 Eric Dvorsak <eric@dvorsak.fr>
+;;; Copyright © 2015 David Thompson <davet@gnu.org>
 ;;; Copyright © 2015 Leo Famulari <leo@famulari.name>
 ;;; Copyright © 2015 Ben Woodcroft <donttrustben@gmail.com>
 ;;; Copyright © 2015 Erik Edrosa <erik.edrosa@gmail.com>
 ;;; Copyright © 2015 Efraim Flashner <efraim@flashner.co.il>
+;;; Copyright © 2015 Kyle Meyer <kyle@kyleam.com>
 ;;;
 ;;; This file is part of GNU Guix.
 ;;;
@@ -960,7 +962,7 @@ datetime module, available in Python 2.3+.")
 (define-public python-parsedatetime
   (package
     (name "python-parsedatetime")
-    (version "1.2")
+    (version "1.5")
     (source
      (origin
       (method url-fetch)
@@ -968,17 +970,19 @@ datetime module, available in Python 2.3+.")
                           "parsedatetime/parsedatetime-" version ".tar.gz"))
       (sha256
        (base32
-        "1zcj0pzxvpl4j2ma9awmpkfxldybi2kjaahjjpmgfbg5cxwcjsqv"))))
+        "1as0mm4ql3z0324nc9bys2s1ngh507i317p16b79rx86wlmvx9ix"))))
     (build-system python-build-system)
     (native-inputs
      `(("python-setuptools" ,python-setuptools)))
-    (arguments `(#:tests? #f))          ;no test target
     (home-page "http://github.com/bear/parsedatetime/")
     (synopsis
      "Parse human-readable date/time text")
     (description
      "Parse human-readable date/time text.")
     (license asl2.0)))
+
+(define-public python2-parsedatetime
+  (package-with-python2 python-parsedatetime))
 
 (define-public python-pandas
   (package
@@ -6006,3 +6010,558 @@ automatically detect a wide range of file encodings.")
 
 (define-public python2-chardet
   (package-with-python2 python-chardet))
+
+(define-public python-docopt
+  (package
+    (name "python-docopt")
+    (version "0.6.2")
+    (source
+     (origin
+       (method url-fetch)
+       ;; The release on PyPI does not include tests.
+       (uri (string-append
+             "https://github.com/docopt/docopt/archive/"
+             version ".tar.gz"))
+       (file-name (string-append name "-" version ".tar.gz"))
+       (sha256
+        (base32
+         "16bf890xbdz3m30rsv2qacklh2rdn1zrfspfnwzx9g7vwz8yw4r1"))))
+    (build-system python-build-system)
+    (native-inputs
+     `(("python-pytest" ,python-pytest)
+       ("python-setuptools" ,python-setuptools)))
+    (arguments
+     `(#:phases (alist-replace
+                 'check
+                 (lambda _ (zero? (system* "py.test")))
+                 %standard-phases)))
+    (home-page "http://docopt.org")
+    (synopsis "Command-line interface description language for Python")
+    (description "This library allows the user to define a command-line
+interface from a program's help message rather than specifying it
+programatically with command-line parsers like @code{getopt} and
+@code{argparse}.")
+    (license license:expat)))
+
+(define-public python2-docopt
+  (package-with-python2 python-docopt))
+
+(define-public python-zope-event
+  (package
+    (name "python-zope-event")
+    (version "4.1.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.event/zope.event-" version ".tar.gz"))
+       (sha256
+        (base32
+         "11p75zpfz3ffhz21nzx9wb23xs993ck5s6hkjcvhswwizni5jynw"))))
+    (build-system python-build-system)
+    (inputs
+     `(("python-setuptools" ,python-setuptools)))
+    (home-page "http://pypi.python.org/pypi/zope.event")
+    (synopsis "Event publishing system for Python")
+    (description "Zope.event provides an event publishing API, intended for
+use by applications which are unaware of any subscribers to their events.  It
+is a simple event-dispatching system on which more sophisticated event
+dispatching systems can be built.")
+    (license zpl2.1)))
+
+(define-public python2-zope-event
+  (package-with-python2 python-zope-event))
+
+(define-public python-zope-interface
+  (package
+    (name "python-zope-interface")
+    (version "4.1.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.interface/zope.interface-" version ".tar.gz"))
+       (sha256
+        (base32
+         "0ks8h73b2g4bkad821qbv0wzjppdrwys33i7ka45ik3wxjg1l8if"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-zope-event" ,python-zope-event)))
+    (home-page "https://github.com/zopefoundation/zope.interface")
+    (synopsis "Python implementation of the \"design by contract\"
+methodology")
+    (description "Zope.interface provides an implementation of \"object
+interfaces\" for Python.  Interfaces are a mechanism for labeling objects as
+conforming to a given API or contract.")
+    (license zpl2.1)))
+
+(define-public python2-zope-interface
+  (package-with-python2 python-zope-interface))
+
+(define-public python-zope-exceptions
+  (package
+    (name "python-zope-exceptions")
+    (version "4.0.8")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.exceptions/zope.exceptions-"
+                           version ".tar.gz"))
+       (sha256
+        (base32
+         "0zwxaaa66sqxg5k7zcrvs0fbg9ym1njnxnr28dfmchzhwjvwnfzl"))))
+    (build-system python-build-system)
+    (arguments
+     '(#:tests? #f)) ; circular dependency with zope.testrunner
+    (propagated-inputs
+     `(("python-zope-interface" ,python-zope-interface)))
+    (home-page "http://cheeseshop.python.org/pypi/zope.exceptions")
+    (synopsis "Zope exceptions")
+    (description "Zope.exceptions provides general-purpose exception types
+that have uses outside of the Zope framework.")
+    (license zpl2.1)))
+
+(define-public python2-zope-exceptions
+  (package-with-python2 python-zope-exceptions))
+
+(define-public python-zope-testing
+  (package
+    (name "python-zope-testing")
+    (version "4.5.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.testing/zope.testing-" version ".tar.gz"))
+       (sha256
+        (base32
+         "1yvglxhzvhl45mndvn9gskx2ph30zz1bz7rrlyfs62fv2pvih90s"))))
+    (build-system python-build-system)
+    (native-inputs
+     `(("python-zope-exceptions" ,python-zope-exceptions)))
+    (propagated-inputs
+     `(("python-zope-interface" ,python-zope-interface)))
+    (home-page "http://pypi.python.org/pypi/zope.testing")
+    (synopsis "Zope testing helpers")
+    (description "Zope.testing provides a number of testing utilities for HTML
+forms, HTTP servers, regular expressions, and more.")
+    (license zpl2.1)))
+
+(define-public python2-zope-testing
+  (package-with-python2 python-zope-testing))
+
+(define-public python-zope-testrunner
+  (package
+    (name "python-zope-testrunner")
+    (version "4.4.9")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.testrunner/zope.testrunner-"
+                           version ".zip"))
+       (sha256
+        (base32
+         "1r7iqknhh55y45f64mz5hghgvzx34h1i11k350s0avx6q8gznja1"))))
+    (build-system python-build-system)
+    (native-inputs
+     `(("python-six" ,python-six)
+       ("python-zope-exceptions" ,python-zope-exceptions)
+       ("python-zope-testing" ,python-zope-testing)
+       ("unzip" ,unzip)))
+    (propagated-inputs
+     `(("python-zope-interface" ,python-zope-interface)))
+    (home-page "http://pypi.python.org/pypi/zope.testrunner")
+    (synopsis "Zope testrunner script")
+    (description "Zope.testrunner provides a script for running Python
+tests.")
+    (license zpl2.1)))
+
+(define-public python2-zope-testrunner
+  (let ((base (package-with-python2 python-zope-testrunner)))
+    (package
+      (inherit base)
+      (native-inputs
+       (append (package-native-inputs base)
+               `(("python2-subunit" ,python2-subunit)
+                 ("python2-mimeparse" ,python2-mimeparse)))))))
+
+(define-public python-zope-i18nmessageid
+  (package
+    (name "python-zope-i18nmessageid")
+    (version "4.0.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "https://pypi.python.org/packages/source/z"
+             "/zope.i18nmessageid/zope.i18nmessageid-"
+             version ".tar.gz"))
+       (sha256
+        (base32
+         "1rslyph0klk58dmjjy4j0jxy21k03azksixc3x2xhqbkv97cmzml"))))
+    (build-system python-build-system)
+    (inputs
+     `(("python-setuptools" ,python-setuptools)))
+    (home-page "http://pypi.python.org/pypi/zope.i18nmessageid")
+    (synopsis "Message identifiers for internationalization")
+    (description "Zope.i18nmessageid provides facilities for declaring
+internationalized messages within program source text.")
+    (license zpl2.1)))
+
+(define-public python2-zope-i18nmessageid
+  (package-with-python2 python-zope-i18nmessageid))
+
+(define-public python-zope-schema
+  (package
+    (name "python-zope-schema")
+    (version "4.4.2")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.schema/zope.schema-" version ".tar.gz"))
+       (sha256
+        (base32
+         "1p943jdxb587dh7php4vx04qvn7b2877hr4qs5zyckvp5afhhank"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-zope-event" ,python-zope-event)
+       ("python-zope-interface" ,python-zope-interface)))
+    (native-inputs
+     `(("python-zope-testing" ,python-zope-testing)))
+    (home-page "http://pypi.python.org/pypi/zope.schema")
+    (synopsis "Zope data schemas")
+    (description "Zope.scheme provides extensions to zope.interface for
+defining data schemas.")
+    (license zpl2.1)))
+
+(define-public python2-zope-schema
+  (package-with-python2 python-zope-schema))
+
+(define-public python-zope-configuration
+  (package
+    (name "python-zope-configuration")
+    (version "4.0.3")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "https://pypi.python.org/packages/source/z"
+                                  "/zope.configuration/zope.configuration-"
+                                  version ".tar.gz"))
+              (sha256
+               (base32
+                "1x9dfqypgympnlm25p9m43xh4qv3p7d75vksv9pzqibrb4cggw5n"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-zope-i18nmessageid" ,python-zope-i18nmessageid)
+       ("python-zope-schema" ,python-zope-schema)))
+    (home-page "http://pypi.python.org/pypi/zope.configuration")
+    (synopsis "Zope Configuration Markup Language")
+    (description "Zope.configuration implements ZCML, the Zope Configuration
+Markup Language.")
+    (license zpl2.1)))
+
+(define-public python2-zope-configuration
+  (package-with-python2 python-zope-configuration))
+
+(define-public python-zope-proxy
+  (package
+    (name "python-zope-proxy")
+    (version "4.1.6")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.proxy/zope.proxy-" version ".tar.gz"))
+       (sha256
+        (base32
+         "0pqwwmvm1prhwv1ziv9lp8iirz7xkwb6n2kyj36p2h0ppyyhjnm4"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-zope-interface" ,python-zope-interface)))
+    (home-page "http://pypi.python.org/pypi/zope.proxy")
+    (synopsis "Generic, transparent proxies")
+    (description "Zope.proxy provides generic, transparent proxies for Python.
+Proxies are special objects which serve as mostly-transparent wrappers around
+another object, intervening in the apparent behavior of the wrapped object
+only when necessary to apply the policy (e.g., access checking, location
+brokering, etc.) for which the proxy is responsible.")
+    (license zpl2.1)))
+
+(define-public python2-zope-proxy
+  (package-with-python2 python-zope-proxy))
+
+(define-public python-zope-location
+  (package
+    (name "python-zope-location")
+    (version "4.0.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.location/zope.location-" version ".tar.gz"))
+       (sha256
+        (base32
+         "1nj9da4ksiyv3h8n2vpzwd0pb03mdsh7zy87hfpx72b6p2zcwg74"))))
+    (build-system python-build-system)
+    (native-inputs
+     `(("python-zope-proxy" ,python-zope-proxy)
+       ("python-zope-schema" ,python-zope-schema)))
+    (home-page "http://pypi.python.org/pypi/zope.location/")
+    (synopsis "Zope location library")
+    (description "Zope.location implements the concept of \"locations\" in
+Zope3, which are are special objects that have a structural location.")
+    (license zpl2.1)))
+
+(define-public python2-zope-location
+  (package-with-python2 python-zope-location))
+
+(define-public python-zope-security
+  (package
+    (name "python-zope-security")
+    (version "4.0.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.security/zope.security-" version ".tar.gz"))
+       (sha256
+        (base32
+         "14zmf684amc0x32kq05yxnhfqd1cmyhafkw05gn81rn90zjv6ssy"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-zope-i18nmessageid" ,python-zope-i18nmessageid)
+       ("python-zope-component" ,python-zope-component)
+       ("python-zope-location" ,python-zope-location)
+       ("python-zope-proxy" ,python-zope-proxy)
+       ("python-zope-schema" ,python-zope-schema)
+       ("python-zope-testrunner" ,python-zope-testrunner)
+       ("python-zope-testing" ,python-zope-testing)))
+    (home-page "http://pypi.python.org/pypi/zope.security")
+    (synopsis "Zope security framework")
+    (description "Zope.security provides a generic mechanism to implement
+security policies on Python objects.")
+    (license zpl2.1)))
+
+(define-public python2-zope-security
+  (let ((zope-security (package-with-python2 python-zope-security)))
+    (package (inherit zope-security)
+      (propagated-inputs
+       `(("python2-zope-testrunner" ,python2-zope-testrunner)
+         ,@(alist-delete
+            "python-zope-testrunner"
+            (package-propagated-inputs zope-security)))))))
+
+(define-public python-zope-component
+  (package
+    (name "python-zope-component")
+    (version "4.2.2")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/z"
+                           "/zope.component/zope.component-" version ".tar.gz"))
+       (sha256
+        (base32
+         "06pqr8m5jv12xjyy5b59hh9anl61cxkzhw9mka33r3nxalmi2b18"))))
+    (build-system python-build-system)
+    (arguments
+     ;; Skip tests due to circular dependency with python-zope-security.
+     '(#:tests? #f))
+    (native-inputs
+     `(("python-zope-testing" ,python-zope-testing)))
+    (propagated-inputs
+     `(("python-zope-event" ,python-zope-event)
+       ("python-zope-interface" ,python-zope-interface)
+       ("python-zope-i18nmessageid" ,python-zope-i18nmessageid)
+       ("python-zope-configuration" ,python-zope-configuration)))
+    (home-page "https://github.com/zopefoundation/zope.component")
+    (synopsis "Zope Component Architecture")
+    (description "Zope.component represents the core of the Zope Component
+Architecture.  Together with the zope.interface package, it provides
+facilities for defining, registering and looking up components.")
+    (license zpl2.1)))
+
+(define-public python2-zope-component
+  (package-with-python2 python-zope-component))
+
+(define-public python2-pythondialog
+  (package
+    (name "python2-pythondialog")
+    (version "3.3.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/p/"
+                           "python2-pythondialog/python2-pythondialog-"
+                           version ".tar.gz"))
+       (sha256
+        (base32
+         "1yhkagsh99bfi592ymczf8rnw8rk6n9hdqy3dd98m3yrx8zmjvry"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (add-after 'unpack 'patch-path
+           (lambda* (#:key inputs #:allow-other-keys)
+             (let* ((dialog (assoc-ref inputs "dialog")))
+               ;; Since this library really wants to grovel the search path, we
+               ;; must hardcode dialog's store path into it.
+               (substitute* "dialog.py"
+                 (("os.getenv\\(\"PATH\", \":/bin:/usr/bin\"\\)")
+                  (string-append "os.getenv(\"PATH\")  + \":" dialog "/bin\"")))
+               #t))))
+       #:python ,python-2
+       #:tests? #f)) ; no test suite
+    (propagated-inputs
+     `(("dialog" ,dialog)))
+    (home-page "http://pythondialog.sourceforge.net/")
+    (synopsis "Python interface to the UNIX dialog utility")
+    (description "A Python wrapper for the dialog utility.  Its purpose is to
+provide an easy to use, pythonic and comprehensive Python interface to dialog.
+This allows one to make simple text-mode user interfaces on Unix-like systems")
+    (license lgpl2.1)))
+
+(define-public python-pyrfc3339
+  (package
+    (name "python-pyrfc3339")
+    (version "0.2")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/p/"
+                           "pyRFC3339/pyRFC3339-" version ".tar.gz"))
+       (sha256
+        (base32
+         "1pp648xsjaw9h1xq2mgwzda5wis2ypjmzxlksc1a8grnrdmzy155"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-pytz" ,python-pytz)))
+    (native-inputs
+     `(("python-nose" ,python-nose)
+       ("python-setuptools" ,python-setuptools)))
+    (home-page "https://github.com/kurtraschke/pyRFC3339")
+    (synopsis "Python timestamp library")
+    (description "Python library for generating and parsing RFC 3339-compliant
+timestamps.")
+    (license license:expat)))
+
+(define-public python2-pyrfc3339
+  (package-with-python2 python-pyrfc3339))
+
+(define-public python-werkzeug
+  (package
+    (name "python-werkzeug")
+    (version "0.11.2")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://pypi.python.org/packages/source/W/Werkzeug"
+                           "/Werkzeug-" version ".tar.gz"))
+       (file-name (string-append name "-" version ".tar.gz"))
+       (sha256
+        (base32
+         "1gzwn1lkl90f3l1nzzxr7vjhm21qk8f837i8rvny5a209fcrhkzb"))))
+    (build-system python-build-system)
+    (native-inputs
+     `(("python-pytest" ,python-pytest)))
+    (home-page "http://werkzeug.pocoo.org/")
+    (synopsis "Utilities for WSGI applications")
+    (description "One of the most advanced WSGI utility modules.  It includes a
+powerful debugger, full-featured request and response objects, HTTP utilities to
+handle entity tags, cache control headers, HTTP dates, cookie handling, file
+uploads, a powerful URL routing system and a bunch of community-contributed
+addon modules.")
+    (license x11)))
+
+(define-public python2-werkzeug
+  (package-with-python2 python-werkzeug))
+
+(define-public python-configobj
+  (package
+    (name "python-configobj")
+    (version "5.0.6")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://pypi.python.org/packages/source/c/configobj/"
+                    "configobj-" version ".tar.gz"))
+              (sha256
+               (base32
+                "00h9rcmws03xvdlfni11yb60bz3kxfvsj6dg6nrpzj71f03nbxd2"))
+              ;; Patch setup.py so it looks for python-setuptools, which is
+              ;; required to parse the keyword 'install_requires' in setup.py.
+              (patches (list (search-patch "python-configobj-setuptools.patch")))))
+    (build-system python-build-system)
+    (native-inputs
+     `(("python-setuptools" ,python-setuptools)
+       ("python-six" ,python-six)))
+    (synopsis "Config file reading, writing and validation")
+    (description "ConfigObj is a simple but powerful config file reader and
+writer: an ini file round tripper.  Its main feature is that it is very easy to
+use, with a straightforward programmer’s interface and a simple syntax for
+config files.")
+    (home-page "https://github.com/DiffSK/configobj")
+    (license bsd-3)))
+
+(define-public python2-configobj
+  (package-with-python2 python-configobj))
+
+(define-public python-configargparse
+  (package
+    (name "python-configargparse")
+    (version "0.10.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://pypi.python.org/packages/source/C/ConfigArgParse/"
+                    "ConfigArgParse-" version ".tar.gz"))
+              (sha256
+               (base32
+                "19wh919gbdbzxzpagg52q3lm62yicm95ddlcx77dyjc1slyshl1v"))))
+    (build-system python-build-system)
+    (arguments
+     ;; FIXME: Bug in test suite filed upstream:
+     ;; https://github.com/bw2/ConfigArgParse/issues/32
+     '(#:tests? #f))
+    (synopsis "Replacement for argparse")
+    (description "A drop-in replacement for argparse that allows options to also
+be set via config files and/or environment variables.")
+    (home-page "https://github.com/bw2/ConfigArgParse")
+    (license license:expat)))
+
+(define-public python2-configargparse
+  (package-with-python2 python-configargparse))
+
+(define-public python-ndg-httpsclient
+  (package
+    (name "python-ndg-httpsclient")
+    (version "0.4.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://pypi.python.org/packages/source/n/ndg-httpsclient/"
+                    "ndg_httpsclient-" version ".tar.gz"))
+              (sha256
+                (base32
+                  "0x32ibixm3vv5m9xfk83xsqm8xcqw4dd0khbh6qbri6rxgymbhg8"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-pyopenssl" ,python-pyopenssl)))
+    (synopsis "HTTPS support for Python's httplib and urllib2")
+    (description "This is a HTTPS client implementation for httplib and urllib2
+based on PyOpenSSL.  PyOpenSSL provides a more fully featured SSL implementation
+over the default provided with Python and importantly enables full verification
+of the SSL peer.")
+    (home-page "https://github.com/cedadev/ndg_httpsclient/")
+    (license bsd-3)))
+
+;; python2-openssl requires special care, so package-with-python2 is
+;; insufficient.
+(define-public python2-ndg-httpsclient
+  (package (inherit python-ndg-httpsclient)
+    (name "python2-ndg-httpsclient")
+    (arguments `(#:python ,python-2))
+    (propagated-inputs
+     `(("python2-pyopenssl" ,python2-pyopenssl)))))
