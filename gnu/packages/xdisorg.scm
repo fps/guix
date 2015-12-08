@@ -46,6 +46,7 @@
   #:use-module (gnu packages guile)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages gtk)
+  #:use-module (gnu packages base)
   #:use-module (gnu packages xorg))
 
 ;; packages outside the x.org system proper
@@ -655,3 +656,36 @@ use it as well.")
      "The xf86-input-wacom driver is the wacom-specific X11 input driver for
 the X.Org X Server version 1.7 and later (X11R7.5 or later).")
     (license license:x11)))
+
+(define-public tightvnc
+  (package
+    (name "tightvnc")
+    (version "1.3.10")
+    (source
+     (origin
+       (method url-fetch)
+       (uri
+        (string-append
+         "http://www.tightvnc.com/download/" version
+         "/tightvnc-" version "_unixsrc.tar.gz"))
+       (sha256
+        (base32
+         "0gcb118yb5rrf2qbsib5n3iynw9y216w3qiwgpwxsmaydvcbn9dz"))))
+    (native-inputs
+     `(("imake" ,imake)
+       ("make" ,gnu-make)))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (add-after
+             'unpack 'chdir
+           (lambda _
+             ;(system* "imake")
+              ;(system* "make")
+              (chdir "Xvnc"))))))
+    (home-page "http://www.tightvnc.com")
+    (synopsis "Free, Lightweight, Fast and Reliable
+Remote Control / Remote Desktop Software")
+    (description #f)
+    (license license:gpl2+)))
