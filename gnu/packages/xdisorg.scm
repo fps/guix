@@ -686,9 +686,9 @@ the X.Org X Server version 1.7 and later (X11R7.5 or later).")
 according to your surroundings")
     (description
      "Redshift adjusts the color temperature according to the
-position of the sun. A different color temperature is set during night and
-daytime. During twilight and early morning, the color temperature transitions
+position of the sun.  A different color temperature is set during night and
+daytime.  During twilight and early morning, the color temperature transitions
 smoothly from night to daytime temperature to allow your eyes to slowly
-adapt. At night the color temperature should be set to match the lamps in your
+adapt.  At night the color temperature should be set to match the lamps in your
 room.")
     (license license:gpl3+)))
