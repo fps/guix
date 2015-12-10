@@ -1933,7 +1933,7 @@ point audio data.")
     (synopsis "SWH Plugins in LV2 format")
     (description
      "Swh-plugins-lv2 is a collection of Steve Harris' audio plugins in LV2
-format. Plugin classes include: dynamic (compressor, limiter), time (delay,
+format.  Plugin classes include: dynamic (compressor, limiter), time (delay,
 chorus, flanger), ringmodulator, distortion, filters, pitchshift,
 oscillators, emulation (valve, tape), bit fiddling (decimator, pointer-
 cast), etc.")
