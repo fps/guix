@@ -681,8 +681,8 @@ the X.Org X Server version 1.7 and later (X11R7.5 or later).")
        ("geoclue" ,geoclue)))
     (home-page "https://github.com/jonls/redshift")
     (synopsis
-     "Adjusts the color temperature of your screen
- according to your surroundings")
+     "Adjusts your screen's color temperature
+according to your surroundings")
     (description
      "Redshift adjusts the color temperature according to the
 position of the sun. A different color temperature is set during night and
