@@ -664,7 +664,9 @@ the X.Org X Server version 1.7 and later (X11R7.5 or later).")
      (origin
        (method url-fetch)
        (uri
-        "https://github.com/jonls/redshift/releases/download/v1.10/redshift-1.10.tar.xz")
+        (string-append "https://github.com/jonls/redshift/"
+                       "releases/download/v" version
+                       "/redshift-" version ".tar.xz"))
        (sha256
         (base32
          "19pfk9il5x2g2ivqix4a555psz8mj3m0cvjwnjpjvx0llh5fghjv"))))
@@ -673,8 +675,7 @@ the X.Org X Server version 1.7 and later (X11R7.5 or later).")
      `(("pkg-config" ,pkg-config)
        ("intltool" ,intltool)))
     (inputs
-     `(
-       ("libdrm" ,libdrm)
+     `(("libdrm" ,libdrm)
        ("libx11" ,libx11)
        ("libxcb" ,libxcb)
        ("libxxf86vm", libxxf86vm)
